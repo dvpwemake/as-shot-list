@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+<meta name="theme-color" content="#FAF6F1"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="color-scheme" content="light"/>
+<title>American Smile · Shot List</title>
+<style>
+:root{
+  --american:#C41E3A;
+  --smile:#1B4F9C;
+  --rust:#B55238;
+  --rust-ink:#6E2E1E;
+  --char:#2B2B2B;
+  --cream:#FAF6F1;
+  --paper:#FFFCF8;
+  --ink:#1A1A1A;
+  --muted:#3F3A36;
+  --line:#D9D0C4;
+  --ok:#1F6B3A;
+  --ok-bg:#E6F3EA;
+  --star:#9A3412;
+  --shadow:0 10px 28px rgba(26,26,26,.08);
+  --safe-t:env(safe-area-inset-top,0px);
+  --safe-b:env(safe-area-inset-bottom,0px);
+  --fs:21px;
+  --fs-sm:18px;
+  --fs-lg:26px;
+  --tap:52px;
+  --font:-apple-system,"PingFang SC","Hiragino Sans GB","Noto Sans SC","Segoe UI",system-ui,sans-serif;
+}
+html[data-size="xl"]{ --fs:26px; --fs-sm:22px; --fs-lg:32px; --tap:58px; }
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%; text-size-adjust:100%}
+body{
+  margin:0; font-family:var(--font); font-size:var(--fs); line-height:1.45;
+  color:var(--ink); background:var(--cream); min-height:100vh;
+  padding-bottom:calc(100px + var(--safe-b));
+}
+button,input,select,textarea{font:inherit; color:inherit}
+button{cursor:pointer}
+.skip{position:absolute;left:-999px}
+.skip:focus{left:8px;top:8px;background:#fff;padding:.5rem 1rem;z-index:80}
+
+header.app{
+  position:sticky; top:0; z-index:40;
+  background:rgba(250,246,241,.96);
+  backdrop-filter:blur(12px);
+  border-bottom:2px solid var(--line);
+  padding:calc(.7rem + var(--safe-t)) 1rem .7rem;
+}
+.brand-row{display:flex;align-items:flex-start;justify-content:space-between;gap:.75rem}
+.wordmark{font-weight:800;letter-spacing:-.02em;line-height:1.1;font-size:1.15rem}
+.wordmark .a{color:var(--american)} .wordmark .s{color:var(--smile);margin-left:.12em}
+.sub{margin:.2rem 0 0;font-size:var(--fs-sm);font-weight:700;color:var(--muted)}
+.h-actions{display:flex;gap:.4rem;flex-shrink:0}
+.btn{
+  min-height:var(--tap); min-width:var(--tap);
+  padding:.55rem .9rem; border-radius:14px; border:2px solid var(--char);
+  background:var(--paper); font-weight:700;
+}
+.btn:focus-visible{outline:3px solid var(--smile); outline-offset:2px}
+.btn.primary{background:var(--rust); color:#fff; border-color:var(--rust-ink)}
+.btn.ghost{border-color:var(--line)}
+.btn.ok{background:var(--ok); color:#fff; border-color:#145028}
+.btn[disabled]{opacity:.45}
+
+.wrap{width:min(820px,100%); margin:0 auto; padding:1rem 1rem 2rem}
+.banner{
+  background:#FFF3D6; border:2px solid #C9A227; border-radius:14px;
+  padding:.85rem 1rem; margin:0 0 1rem; font-size:var(--fs-sm); font-weight:650;
+}
+.tabs{display:flex;gap:.5rem;margin:0 0 1rem}
+.tabs button{flex:1}
+.tabs button[aria-selected="true"]{background:var(--char);color:#fff;border-color:var(--char)}
+@media(max-width:640px){
+  .tabs .en{display:none}
+  .dock{display:grid;grid-template-columns:1fr 1fr}
+  .dock .btn{max-width:none;width:100%}
+  .check{transform:scale(1.15)}
+}
+
+.card{
+  background:var(--paper); border:2px solid var(--line); border-radius:16px;
+  padding:1rem; margin:0 0 1rem;
+}
+.card h2{margin:0 0 .7rem;font-size:var(--fs-lg);line-height:1.2}
+details.card summary{cursor:pointer;list-style:none;font-size:var(--fs-sm)}
+details.card summary::-webkit-details-marker{display:none}
+details.card code{font-size:.9em}
+label.field{display:block;margin:0 0 .75rem}
+label.field span{
+  display:block; font-size:var(--fs-sm); font-weight:800;
+  letter-spacing:.04em; text-transform:uppercase; margin-bottom:.25rem;
+}
+input[type="text"],input[type="date"],input[type="number"],select,textarea{
+  width:100%; min-height:var(--tap); padding:.65rem .8rem;
+  border:2px solid var(--char); border-radius:12px; background:#fff;
+}
+textarea{min-height:7.5rem; resize:vertical; line-height:1.4}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:.75rem}
+@media(max-width:640px){.grid2{grid-template-columns:1fr}}
+[hidden]{display:none!important}
+
+.progress{
+  display:flex;align-items:center;justify-content:space-between;gap:.75rem;
+  font-weight:800; margin:.2rem 0 .8rem;
+}
+.bar{flex:1;height:14px;background:#E8DFD4;border-radius:99px;overflow:hidden}
+.bar>i{display:block;height:100%;background:var(--rust);width:0}
+.chips{display:flex;flex-wrap:wrap;gap:.4rem;margin:0 0 1rem}
+.chips a{
+  display:inline-flex;align-items:center;min-height:44px;
+  padding:.35rem .75rem;border-radius:999px;border:2px solid var(--line);
+  background:#fff; color:var(--ink); text-decoration:none; font-weight:750; font-size:var(--fs-sm);
+}
+.chips a:focus-visible{outline:3px solid var(--smile)}
+
+section.block{margin:0 0 1.25rem}
+.sec-head{
+  background:var(--rust); color:#fff; border-radius:14px 14px 0 0;
+  padding:.85rem 1rem; display:flex; justify-content:space-between; gap:.75rem; align-items:flex-start;
+}
+.sec-head.dark{background:var(--char)}
+.sec-head h3{margin:0;font-size:1.15em}
+.sec-head p{margin:.25rem 0 0;font-size:var(--fs-sm);opacity:.95;font-weight:600}
+.sec-body{border:2px solid var(--rust); border-top:0; border-radius:0 0 14px 14px; background:#fff; overflow:hidden}
+.sec-body.dark{border-color:var(--char)}
+.note-call{
+  background:#F8E6DC; color:var(--rust-ink); padding:.8rem 1rem;
+  font-size:var(--fs-sm); font-weight:700; border-top:2px solid #E8C4B4;
+}
+
+.shot{
+  display:grid; grid-template-columns:auto 1fr; gap:.65rem .8rem;
+  padding:.85rem .85rem .75rem; border-top:1px solid var(--line);
+}
+.shot:first-child{border-top:0}
+.shot.done{background:var(--ok-bg)}
+.shot.star .who{color:var(--star)}
+.check{
+  width:36px;height:36px;margin-top:.15rem;accent-color:var(--ok);
+  transform:scale(1.35); transform-origin:top left;
+}
+.who{font-weight:900; letter-spacing:.02em; margin-right:.35rem}
+.desc{font-weight:650}
+.meta-row{margin-top:.25rem; font-size:var(--fs-sm); font-weight:700; color:var(--muted)}
+.meta-row b{color:var(--ink); font-weight:800; margin:0 .15rem}
+.shot textarea{
+  grid-column:2; min-height:3.4rem; font-size:var(--fs-sm); margin-top:.15rem;
+  border-color:var(--line);
+}
+
+.checkrow{
+  display:grid; grid-template-columns:auto 1fr; gap:.6rem .75rem; align-items:flex-start;
+  padding:.75rem .9rem; border-top:1px solid var(--line); font-weight:650;
+}
+.checkrow:first-child{border-top:0}
+.q{padding:.9rem;border-top:1px solid var(--line)}
+.q:first-child{border-top:0}
+.q .tag{display:inline-block;font-size:var(--fs-sm);font-weight:800;color:var(--rust);margin-left:.4rem}
+.q textarea{margin-top:.45rem}
+
+.log-item{
+  border-top:1px solid var(--line); padding:.75rem 0;
+}
+.log-item time{display:block;font-size:var(--fs-sm);font-weight:800;color:var(--muted)}
+.log-item p{margin:.2rem 0 0;white-space:pre-wrap}
+.empty{color:var(--muted);font-weight:650}
+
+.status{
+  font-size:var(--fs-sm); font-weight:800; color:var(--ok);
+  min-height:1.3em;
+}
+
+.dock{
+  position:fixed; left:0; right:0; bottom:0; z-index:50;
+  background:#fff; border-top:2px solid var(--char);
+  padding:.65rem 1rem calc(.65rem + var(--safe-b));
+  display:flex; gap:.5rem; flex-wrap:wrap; justify-content:center;
+}
+.dock .btn{flex:1 1 140px; max-width:280px}
+@media(max-width:640px){
+  .dock{display:grid;grid-template-columns:1fr 1fr}
+  .dock .btn{max-width:none;width:100%;flex:none}
+}
+
+.modal{
+  position:fixed; inset:0; z-index:70; background:rgba(26,26,26,.45);
+  display:flex; align-items:flex-end; justify-content:center; padding:1rem;
+}
+.modal[hidden]{display:none}
+.modal-card{
+  width:min(640px,100%); background:var(--paper); border-radius:18px 18px 8px 8px;
+  border:2px solid var(--char); padding:1rem; box-shadow:var(--shadow);
+}
+.modal-card h2{margin:.1rem 0 .6rem}
+.row-actions{display:flex;gap:.5rem;margin-top:.7rem}
+.row-actions .btn{flex:1}
+
+footer.fine{
+  text-align:center; color:var(--muted); font-size:var(--fs-sm); font-weight:650;
+  padding:1rem .5rem 0;
+}
+@media print{
+  header.app,.dock,.h-actions,.tabs,.chips,.banner{display:none!important}
+  body{padding:0;background:#fff}
+  .shot textarea{border:0}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to list</a>
+<header class="app">
+  <div class="brand-row">
+    <div>
+      <div class="wordmark"><span class="a">American</span><span class="s">Smile</span></div>
+      <p class="sub" id="pageSub">每城拍摄清单</p>
+    </div>
+    <div class="h-actions">
+      <button type="button" class="btn ghost" id="btnSize" aria-pressed="false" aria-label="Larger type" title="Larger type">Aa</button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap" id="main">
+  <p class="banner">Host face never. Guest face OK.</p>
+
+  <div class="tabs" role="tablist" aria-label="List type">
+    <button type="button" class="btn" role="tab" id="tabCity" aria-selected="true">每城 <span class="en">City</span></button>
+    <button type="button" class="btn" role="tab" id="tabRoad" aria-selected="false">行车 <span class="en">Road</span></button>
+  </div>
+
+  <div class="card">
+    <h2>This stop</h2>
+    <div class="grid2">
+      <label class="field"><span>Saved sessions</span>
+        <select id="sessionPick"></select>
+      </label>
+      <label class="field"><span>Episode</span>
+        <input id="fEpisode" type="text" list="epList" placeholder="EP1 New York" autocomplete="off"/>
+      </label>
+    </div>
+    <datalist id="epList">
+      <option value="EP1 New York, Capital of the World"></option>
+      <option value="EP2 Angie's Smile"></option>
+      <option value="EP3 Philadelphia Smiles"></option>
+      <option value="EP4 Surprising Smile"></option>
+      <option value="EP5 Smile of Common Grounds"></option>
+    </datalist>
+    <div class="grid2" id="cityFields">
+      <label class="field"><span>城市 City</span><input id="fCity" type="text" autocomplete="off"/></label>
+      <label class="field"><span>日期 Date</span><input id="fDate" type="date"/></label>
+      <label class="field"><span>主角 Subject</span><input id="fSubject" type="text" autocomplete="off"/></label>
+      <label class="field"><span>场景 Location</span><input id="fLocation" type="text" autocomplete="off"/></label>
+    </div>
+    <div class="grid2" id="roadFields" hidden>
+      <label class="field"><span>路段 From → To</span><input id="fRoute" type="text" placeholder="Birmingham → Jackson" autocomplete="off"/></label>
+      <label class="field"><span>日期 Date</span><input id="fDateR" type="date"/></label>
+      <label class="field"><span>里程 Miles</span><input id="fMiles" type="text" inputmode="decimal" autocomplete="off"/></label>
+      <label class="field"><span>驾驶 / 拍摄 Crew</span><input id="fCrew" type="text" autocomplete="off"/></label>
+    </div>
+    <div class="row-actions">
+      <button type="button" class="btn ghost" id="btnNew">New stop</button>
+    </div>
+    <p class="status" id="saveStatus" aria-live="polite">Autosave on.</p>
+  </div>
+
+  <div class="progress"><span id="progLabel">0 / 0</span><div class="bar" aria-hidden="true"><i id="progBar"></i></div></div>
+  <nav class="chips" id="chips" aria-label="Jump to section"></nav>
+  <div id="lists"></div>
+
+  <div class="card">
+    <h2 id="journalTitle">本城笔记</h2>
+    <p class="empty" id="journalHint">今天最好的瞬间 / 需要补拍的东西</p>
+    <label class="field"><span>Best moment</span><textarea id="fBest" placeholder="The moment that must stay in the cut"></textarea></label>
+    <label class="field"><span>Pickups / 补拍</span><textarea id="fPickups" placeholder="What to go back for"></textarea></label>
+    <label class="field"><span>Free journal</span><textarea id="fJournal"></textarea></label>
+  </div>
+
+  <details class="card" id="adminBox">
+    <summary><b>Admin</b> — GitHub send (once per phone)</summary>
+    <p class="empty" style="margin:.6rem 0">Reports go to this repo’s <code>reports/</code> folder. Paste a token with Contents write. Stored only on this phone.</p>
+    <label class="field"><span>GitHub token</span>
+      <input id="fToken" type="password" autocomplete="off" placeholder="ghp_… or github_pat_…"/>
+    </label>
+    <p class="status" id="ghStatus"></p>
+  </details>
+</main>
+
+<div class="dock">
+  <button type="button" class="btn primary" id="btnSend">Send report to GitHub</button>
+</div>
+
+<footer class="fine">Autosave on this phone · Send writes a CSV to GitHub for admin download</footer>
+
+<script>
+(function(){
+"use strict";
+const STORE = "as.shotlist.v2";
+const TOKEN_KEY = "as.shotlist.gh_token";
+const GH_OWNER = "dvpwemake";
+const GH_REPO = "as-shot-list";
+const GH_BRANCH = "main";
+
+const CITY = {
+  id:"city",
+  title:"每城拍摄清单",
+  journal:"本城笔记",
+  hint:"今天最好的瞬间 / 需要补拍的东西",
+  sections:[
+    {id:"A", name:"A — 城市定位", note:"15 分钟内拍完，不恋战。纯空镜留到最后，有时间再补。",
+     shots:[
+      ["A1","城市标志性视角，但画面里必须有人在走动","大全","固定","10s"],
+      ["A2","街道横切面，前景有遮挡物（车、柱、树）制造纵深","全","固定","10s"],
+      ["A3","本地文字：店招、路牌、涂鸦、车牌","特写","固定","5s ×3"],
+      ["A4","主角走过这条街——让他走入画面，再走出去","中全","固定","15s"]
+    ]},
+    {id:"B", name:"B — 落座与观察", note:"前 15 分钟不搭话。先当客人，再当摄制组。尽量卡在开门时间到店。人最少、光最好、咖啡师最闲，也最容易搭上话——而且开门这一整套动作是白送的开场镜头。",
+     shots:[
+      ["B1","推门进店：门、风铃、招牌、迎面的光","中","固定","10s"],
+      ["B2","吧台全景——先别搭话，让店里先习惯你们在场","全","固定","30s"],
+      ["B3","你们自己点单、等待、接过杯子的全过程","中 / 特","固定","完整"],
+      ["B4","环视：座位、墙上的东西、常客坐的那个位置","全 / 特","固定","20s"]
+    ]},
+    {id:"C", name:"C — 过程段落 · 核心", note:"同一个动作拍满 C1–C3 三个景别再换机位。少于三个 ＝ 死素材。C5 是全片最值钱的镜头。他和熟客、同事、家人之间的对话，比任何一句采访都真。看到苗头就开机，别等他们说完再问「能不能再说一遍」。",
+     shots:[
+      ["C1","他在做的事——含环境，能看出这是哪儿","全","固定","30s"],
+      ["C2","同一动作，人物上半身","中","固定","30s"],
+      ["C3","同一动作，手部","特写","固定 / 微移","20s"],
+      ["C4","他工作时的脸。不看镜头，不说话","近","固定","20s"],
+      ["C5","他和另一个人的真实对话（同期声必须干净）","中","固定","完整", true],
+      ["C6","反打：对方的脸和反应","近","固定","完整"]
+    ]},
+    {id:"D", name:"D — 采访", note:"坐下来拍，双机位，绝不手持。领夹麦 ＋ 机头麦双录。让他先说 30 秒废话热身。每个回答说完后，你在心里数三秒再开口——那三秒就是剪辑点。",
+     shots:[
+      ["D1","主机位：正面偏 15°，眼睛落在上三分之一线，留出视线空间","近","固定","全程"],
+      ["D2","副机位：侧 45° 或 90°，景别与主机位错开一档","中 / 特","固定","全程"],
+      ["D3","手部小动作：紧张、比划、端杯子","特写","固定","穿插"]
+    ]},
+    {id:"H", name:"H — 咖啡馆", note:"不要再拍拉花了。拍店里发生的事，不拍杯子里的东西。",
+     shots:[
+      ["H1","咖啡师和熟客的对话（叫得出名字的那种）","中","固定","完整"],
+      ["H2","吧台前等待的队列与人的姿态","中全","固定","20s"],
+      ["H3","一个独自坐着的人——不切，拍满 20 秒","中","固定","20s"],
+      ["H4","同一机位早晚各拍一次，看光的变化","全","固定","15s ×2"]
+    ]},
+    {id:"E", name:"E — B-roll", note:"跟着采访内容拍，不要泛拍街景。他嘴里提到什么，就去拍什么。",
+     shots:[
+      ["E1","他提到的那个物件","特写","固定","10s"],
+      ["E2","他提到的那个地方","全 / 中","固定","15s"],
+      ["E3","他的工具、工作台、鞋、手上的痕迹","特写","固定","10s"],
+      ["E4","光：窗、门口、灯亮起的瞬间","任意","固定","15s"]
+    ]},
+    {id:"F", name:"F — 离开（结尾镜头）", note:"每天收工前必拍。这是剪辑时的出口。",
+     shots:[
+      ["F1","收工：关灯、锁门、拉下卷帘","中","固定","完整"],
+      ["F2","他走出画面后，镜头留在空场景上再拍 5 秒","全","固定","20s"],
+      ["F3","他离开后的空间（同 B3 机位，首尾呼应）","全","固定","15s"]
+    ]},
+    {id:"G", name:"G — 博物馆", note:"主角是看展的人，不是展品。先确认馆方拍摄许可与闪光灯规定。",
+     shots:[
+      ["G1","展厅全景，有观众在其中走动","大全","固定","20s"],
+      ["G2","主角站在一件展品前（背影或侧脸）","中","固定","20s"],
+      ["G3","展品本身","特写","微移","10s"],
+      ["G4","陌生观众看展时的脸","近","固定","15s ×3"],
+      ["G5","从展品的位置反打向观众","中","固定","15s"]
+    ]}
+  ],
+  groups:[
+    {id:"talk", name:"搭话与授权", tone:"dark", note:"没有预约，全靠这一步。顺序错了就前功尽弃。",
+     items:[
+      ["talk1","先消费、先坐下，机器还在包里"],
+      ["talk2","一句话说清：从纽约开到旧金山，拍普通人"],
+      ["talk3","先找店里说了算的人（经理 / owner）"],
+      ["talk4","拿到店的许可，再问顾客本人"],
+      ["talk5","手机版 release form，当场签，不用打印"],
+      ["talk6","被拒绝就道谢走人，不解释、不追问"],
+      ["talk7","问「能拍你干活吗」，别问「能采访你吗」"],
+      ["talk8","答应了先拍 C 组，采访放最后"]
+    ]},
+    {id:"pre", name:"开拍前 60 秒", tone:"dark", note:"每换一个场景都要过一遍。技术问题靠纪律解决，不靠现场判断。",
+     items:[
+      ["pre1","白平衡手动锁定，先拍一张白纸"],
+      ["pre2","录音电平峰值 −12dB，戴耳机监听"],
+      ["pre3","快门 1/50（24fps），ISO 停在基准值"],
+      ["pre4","三脚架水平，或已找到支撑点"],
+      ["pre5","人物侧对窗，机器背对窗"],
+      ["pre6","电池、存储卡余量"],
+      ["pre7","直方图不贴右，高光没死"],
+      ["pre8","口报场记：「城市－人名－场景－第几条」"]
+    ]},
+    {id:"wrap", name:"收工前 60 秒", tone:"dark", note:"四件事，一件都不能漏。",
+     items:[
+      ["wrap1","肖像授权（release form）已签字"],
+      ["wrap2","素材当天双备份（两块硬盘 / 硬盘＋云）"],
+      ["wrap3","对方联系方式已存（补拍、补录音用）"],
+      ["wrap4","今天最好的一个瞬间，写在下面"]
+    ]}
+  ],
+  questions:[
+    ["q1","你店里卖得最少、但你最舍不得下架的是哪一支？","咖啡人"],
+    ["q2","你对连锁咖啡怎么看？","咖啡人"],
+    ["q3","这座城市最让你感动的是什么？","所有人"],
+    ["q4","你对第四次咖啡浪潮怎么看？先问「跟五年前比变了什么」，对方自己提到 fourth wave 再追。","咖啡人"],
+    ["q5","你想对这个世界说句什么话？一句能让更多人微笑面对生活的话。","所有人"]
+  ]
+};
+
+const ROAD = {
+  id:"road",
+  title:"行车段落拍摄清单",
+  journal:"本段路笔记",
+  hint:"路上撞见的人 / 想回头补的东西 / 下一段的机位打算怎么换",
+  floorNote:"再赶时间，这三样也必须拿到。缺一样，这段路在片子里就不存在。",
+  sections:[
+    {id:"R", name:"R — 车内", note:"吸盘架固定，副驾操作。开车的人不碰机器。",
+     shots:[
+      ["R1","挡风玻璃前方的公路——一条连续 30 秒，中途不切","全","车载固定","30s", true],
+      ["R2","副驾侧窗掠过的景（田、厂、招牌、树线）","中","车载固定","20s"],
+      ["R3","后视镜里的路，或后视镜里驾驶员的眼睛","特写","固定","15s"],
+      ["R4","方向盘上的手","特写","固定","15s"],
+      ["R5","驾驶员的侧脸——沉默，不说话，不看镜头","近","固定","20s"],
+      ["R6","里程表、油量、导航屏上的地名","特写","固定","10s"],
+      ["R7","车里的真实闲聊 ★ 别演，别复述，开机就忘了它","中","固定","完整", true]
+    ]},
+    {id:"S", name:"S — 车外", note:"要停车、下车、架机器。每段路至少停两次。",
+     shots:[
+      ["S1","州界牌 ★ 全片的章节标题就靠它，一块都不能漏","中","固定","15s", true],
+      ["S2","机器架路边，让自己的车从画面里穿过去（来回拍两条）","全","固定","×2"],
+      ["S3","空旷公路，画面里一辆车都没有","大全","固定","20s"],
+      ["S4","路面：白线、补丁、柏油裂缝、压出来的车辙","特写","固定","10s"],
+      ["S5","车停路肩，人下车伸懒腰、走动、抽烟","全","固定","20s"]
+    ]},
+    {id:"T", name:"T — 停靠点", note:"加油站、路边餐馆、汽车旅馆。这里最容易撞见真正的美国人。T6 是这份清单里最容易跳过、也最值钱的一项。路上遇到的人不需要预约。每段路至少拿到一个。",
+     shots:[
+      ["T1","加油站招牌与油价数字（各州差价本身就是信息）","中 / 特","固定","10s"],
+      ["T2","加油动作：油枪、跳表、手","特写","固定","完整"],
+      ["T3","便利店内部：货架、冰柜、收银台后的人","中","固定","20s"],
+      ["T4","汽车旅馆招牌，夜里亮灯时最好","中","固定","15s"],
+      ["T5","夜里的停车场、车灯、便利店的白光","全","固定","20s"],
+      ["T6","和陌生人的一句真实对话 ★ 收银员、加油的人、隔壁桌","中","固定","完整", true]
+    ]},
+    {id:"U", name:"U — 时间与光", note:"同一条路在不同时刻是不同的路。行车段落的情绪几乎全靠这一组。Birmingham 往西南进入密西西比、路易斯安那是微笑曲线的谷底——U1 和 T6 建议拍到平常的两倍量。",
+     shots:[
+      ["U1","黄金时刻的公路——日出、日落各拍一次，一天两个窗口别浪费","大全","固定","30s ×2", true],
+      ["U2","夜路：前车尾灯、对向车灯、路灯掠过车内","中","车载固定","20s"],
+      ["U3","坏天气：雨、雾、暴晒后的柏油热浪","任意","固定","20s"],
+      ["U4","车窗上的雨痕、虫尸、灰","特写","固定","10s"]
+    ]},
+    {id:"V", name:"V — 声音（单独采，不附带画面）", note:"行车段落在剪辑台上七成靠声音撑住。这一组比画面还重要。",
+     shots:[
+      ["V1","车内行驶底噪，30 秒无人说话——铺整段路用","—","录音","30s"],
+      ["V2","收音机扫台 ★ 每进一个州扫一次，本地电台＝免费的地域标识","—","录音","60s", true],
+      ["V3","加油站 / 餐馆环境声（含背景音乐与人声）","—","录音","60s"],
+      ["V4","动作音效：关车门、点火、拉手刹、脚踩碎石","—","录音","各 3 遍"],
+      ["V5","路边站定，录过往车辆由远及近再远去","—","录音","60s"]
+    ]}
+  ],
+  groups:[
+    {id:"safe", name:"安全与规矩", tone:"dark", note:"开车的人不碰机器。",
+     items:[
+      ["safe1","吸盘架加一根保险绳，掉一次就没了"],
+      ["safe2","驾驶中一律不碰机器，只由副驾操作"],
+      ["safe3","州际公路路肩禁停，拍 S 组走匝道或辅路"],
+      ["safe4","加油站是私产，架三脚架前先问店员"],
+      ["safe5","国家公园、部落地全境禁飞无人机"],
+      ["safe6","天黑后不在陌生路段单独下车拍摄"]
+    ]},
+    {id:"tech", name:"车拍技术", tone:"dark", note:"",
+     items:[
+      ["tech1","快门锁 1/50，白天靠 ND 压光"],
+      ["tech2","机器上了固定架就关掉机身防抖"],
+      ["tech3","玻璃反光：用偏振镜，或仪表台铺黑布"],
+      ["tech4","不拍高速掠过的护栏、栅栏（果冻效应）"],
+      ["tech5","车载机位每段路换一次，别九段都一样"],
+      ["tech6","长途开机前确认卡有余量，别拍到一半停"]
+    ]}
+  ],
+  questions:[]
+};
+
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s==null?"":s)
+  .replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+
+function uid(){ return "s" + Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
+function today(){ return new Date().toISOString().slice(0,10); }
+function nowISO(){ return new Date().toISOString(); }
+function niceTime(iso){
+  try{
+    const d = new Date(iso);
+    return d.toLocaleString(undefined,{month:"short",day:"numeric",hour:"2-digit",minute:"2-digit"});
+  }catch(e){ return iso; }
+}
+function spec(type){ return type==="road" ? ROAD : CITY; }
+function allShots(sp){
+  const out=[];
+  (sp.sections||[]).forEach(sec => (sec.shots||[]).forEach(sh => out.push(sh)));
+  return out;
+}
+
+function blank(type){
+  return {
+    id: uid(), type, episode:"", date: today(),
+    city:"", subject:"", location:"",
+    route:"", miles:"", crew:"",
+    shots:{}, checks:{}, answers:{},
+    journal:"", best:"", pickups:"",
+    log:[], updated: nowISO()
+  };
+}
+
+let db = { current:null, sessions:[] };
+
+function load(){
+  try{
+    const raw = localStorage.getItem(STORE);
+    if(raw){
+      const p = JSON.parse(raw);
+      if(p && Array.isArray(p.sessions)) db = p;
+    }
+  }catch(e){}
+  if(!db.sessions.length){
+    const s = blank("city");
+    db.sessions = [s];
+    db.current = s.id;
+  }
+  if(!db.current || !db.sessions.find(x=>x.id===db.current)) db.current = db.sessions[0].id;
+}
+function persist(){
+  const s = cur();
+  if(s) s.updated = nowISO();
+  try{ localStorage.setItem(STORE, JSON.stringify(db)); }
+  catch(e){ $("saveStatus").textContent = "Autosave blocked on this phone."; return; }
+  $("saveStatus").textContent = "Autosaved · " + niceTime(nowISO());
+}
+function cur(){ return db.sessions.find(x=>x.id===db.current); }
+
+function sessionLabel(s){
+  const place = s.type==="road" ? (s.route || "Road") : (s.city || "City");
+  return (s.date||"?") + " · " + (s.episode || s.type) + " · " + place;
+}
+
+function fillSessionSelect(){
+  const sel = $("sessionPick");
+  const type = cur().type;
+  const list = db.sessions.filter(s=>s.type===type);
+  sel.innerHTML = list.map(s =>
+    `<option value="${esc(s.id)}"${s.id===db.current?" selected":""}>${esc(sessionLabel(s))}</option>`
+  ).join("");
+}
+
+function applyFields(){
+  const s = cur();
+  const cityMode = s.type==="city";
+  $("cityFields").hidden = !cityMode;
+  $("roadFields").hidden = cityMode;
+  $("pageSub").textContent = spec(s.type).title;
+  $("tabCity").setAttribute("aria-selected", cityMode?"true":"false");
+  $("tabRoad").setAttribute("aria-selected", cityMode?"false":"true");
+  $("fEpisode").value = s.episode||"";
+  $("fDate").value = s.date||"";
+  $("fDateR").value = s.date||"";
+  $("fCity").value = s.city||"";
+  $("fSubject").value = s.subject||"";
+  $("fLocation").value = s.location||"";
+  $("fRoute").value = s.route||"";
+  $("fMiles").value = s.miles||"";
+  $("fCrew").value = s.crew||"";
+  $("fJournal").value = s.journal||"";
+  $("fBest").value = s.best||"";
+  $("fPickups").value = s.pickups||"";
+  $("journalTitle").textContent = spec(s.type).journal;
+  $("journalHint").textContent = spec(s.type).hint;
+}
+
+function render(){
+  const s = cur();
+  const sp = spec(s.type);
+  fillSessionSelect();
+  applyFields();
+
+  const chips = [];
+  let html = "";
+  if(sp.floorNote){
+    html += `<p class="banner"><b>每段路最低标准：</b> S1 州界牌 · R1 挡风 30 秒不切 · V2 每州扫台。${esc(sp.floorNote)}</p>`;
+  }
+  sp.sections.forEach(sec=>{
+    chips.push(`<a href="#sec-${sec.id}">${esc(sec.id)}</a>`);
+    html += `<section class="block" id="sec-${sec.id}">
+      <div class="sec-head"><div><h3>${esc(sec.name)}</h3>${sec.note?`<p>${esc(sec.note)}</p>`:""}</div></div>
+      <div class="sec-body">`;
+    sec.shots.forEach(sh=>{
+      const [id,desc,size,move,dur,star] = sh;
+      const st = s.shots[id] || {done:false, note:""};
+      html += `<div class="shot${st.done?" done":""}${star?" star":""}" data-shot="${id}">
+        <input class="check" type="checkbox" id="ck-${id}" ${st.done?"checked":""} aria-label="${esc(id)} done"/>
+        <div>
+          <label for="ck-${id}"><span class="who">${esc(id)}</span><span class="desc">${esc(desc)}</span></label>
+          <div class="meta-row">景别 <b>${esc(size)}</b> · 运镜 <b>${esc(move)}</b> · 时长 <b>${esc(dur)}</b></div>
+          <textarea data-shotnote="${id}" placeholder="Shot note">${esc(st.note||"")}</textarea>
+        </div>
+      </div>`;
+    });
+    html += `</div></section>`;
+  });
+
+  (sp.groups||[]).forEach(g=>{
+    chips.push(`<a href="#sec-${g.id}">${esc(g.name.split(" ")[0])}</a>`);
+    html += `<section class="block" id="sec-${g.id}">
+      <div class="sec-head dark"><div><h3>${esc(g.name)}</h3>${g.note?`<p>${esc(g.note)}</p>`:""}</div></div>
+      <div class="sec-body dark">`;
+    g.items.forEach(([id,label])=>{
+      const on = !!s.checks[id];
+      html += `<label class="checkrow"><input class="check" type="checkbox" data-check="${id}" ${on?"checked":""}/> <span>${esc(label)}</span></label>`;
+    });
+    html += `</div></section>`;
+  });
+
+  if(sp.questions && sp.questions.length){
+    chips.push(`<a href="#sec-Q">Q</a>`);
+    html += `<section class="block" id="sec-Q">
+      <div class="sec-head"><div><h3>贯穿全片的五个问题</h3><p>Q3、Q5 见人就问；Q1、Q2、Q4 只问咖啡从业者。</p></div></div>
+      <div class="sec-body">`;
+    sp.questions.forEach((q,i)=>{
+      const [id,text,who] = q;
+      html += `<div class="q"><div><b>0${i+1}</b> ${esc(text)} <span class="tag">${esc(who)}</span></div>
+        <textarea data-ans="${id}" placeholder="Answer / who said it">${esc(s.answers[id]||"")}</textarea></div>`;
+    });
+    html += `</div></section>`;
+  }
+
+  $("chips").innerHTML = chips.join("");
+  $("lists").innerHTML = html;
+  updateProgress();
+}
+
+function updateProgress(){
+  const s = cur();
+  const shots = allShots(spec(s.type));
+  const done = shots.filter(sh => s.shots[sh[0]] && s.shots[sh[0]].done).length;
+  $("progLabel").textContent = done + " / " + shots.length + " shots";
+  $("progBar").style.width = (shots.length? (done/shots.length*100):0) + "%";
+}
+
+function bind(){
+  $("tabCity").onclick = () => switchType("city");
+  $("tabRoad").onclick = () => switchType("road");
+  $("sessionPick").onchange = (e)=>{ db.current = e.target.value; persist(); render(); };
+  $("btnNew").onclick = ()=>{
+    const s = blank(cur().type);
+    db.sessions.unshift(s); db.current = s.id; persist(); render();
+  };
+  $("btnSize").onclick = ()=>{
+    const xl = document.documentElement.getAttribute("data-size")==="xl";
+    document.documentElement.setAttribute("data-size", xl?"":"xl");
+    $("btnSize").setAttribute("aria-pressed", xl?"false":"true");
+    $("btnSize").textContent = xl ? "Aa" : "A";
+    $("btnSize").title = xl ? "Larger type" : "Standard type";
+    localStorage.setItem(STORE+".size", xl?"":"xl");
+  };
+  if(localStorage.getItem(STORE+".size")==="xl"){
+    document.documentElement.setAttribute("data-size","xl");
+    $("btnSize").setAttribute("aria-pressed","true");
+    $("btnSize").textContent = "A";
+    $("btnSize").title = "Standard type";
+  }
+
+  const map = [
+    ["fEpisode","episode"],["fCity","city"],["fSubject","subject"],["fLocation","location"],
+    ["fRoute","route"],["fMiles","miles"],["fCrew","crew"],
+    ["fJournal","journal"],["fBest","best"],["fPickups","pickups"]
+  ];
+  map.forEach(([id,key])=>{
+    $(id).addEventListener("input", ()=>{ cur()[key] = $(id).value; persist(); fillSessionSelect(); });
+  });
+  $("fDate").addEventListener("input", ()=>{ cur().date=$("fDate").value; persist(); fillSessionSelect(); });
+  $("fDateR").addEventListener("input", ()=>{ cur().date=$("fDateR").value; persist(); fillSessionSelect(); });
+
+  $("lists").addEventListener("change", (e)=>{
+    const s = cur();
+    if(e.target.matches("[data-check]")){
+      s.checks[e.target.getAttribute("data-check")] = e.target.checked;
+      persist(); return;
+    }
+    if(e.target.matches("input.check") && e.target.id.startsWith("ck-")){
+      const id = e.target.id.slice(3);
+      s.shots[id] = s.shots[id] || {done:false, note:""};
+      s.shots[id].done = e.target.checked;
+      e.target.closest(".shot").classList.toggle("done", e.target.checked);
+      persist(); updateProgress();
+    }
+  });
+  $("lists").addEventListener("input", (e)=>{
+    const s = cur();
+    if(e.target.matches("[data-shotnote]")){
+      const id = e.target.getAttribute("data-shotnote");
+      s.shots[id] = s.shots[id] || {done:false, note:""};
+      s.shots[id].note = e.target.value;
+      persist();
+    }
+    if(e.target.matches("[data-ans]")){
+      s.answers[e.target.getAttribute("data-ans")] = e.target.value;
+      persist();
+    }
+  });
+
+  $("fToken").value = localStorage.getItem(TOKEN_KEY) || "";
+  $("fToken").addEventListener("input", ()=>{
+    localStorage.setItem(TOKEN_KEY, $("fToken").value.trim());
+    $("ghStatus").textContent = $("fToken").value.trim() ? "Token saved on this phone." : "";
+  });
+  $("btnSend").onclick = sendReport;
+  document.addEventListener("visibilitychange", ()=>{ if(document.hidden) persist(); });
+  window.addEventListener("pagehide", persist);
+}
+
+function switchType(type){
+  let s = db.sessions.find(x => x.type===type);
+  if(!s){ s = blank(type); db.sessions.unshift(s); }
+  db.current = s.id; persist(); render();
+}
+
+function csvCell(v){
+  const t = String(v==null?"":v).replace(/\r?\n/g," ").replace(/"/g,'""');
+  return `"${t}"`;
+}
+
+function buildCsv(){
+  const s = cur();
+  const sp = spec(s.type);
+  const headers = ["report_type","episode","session_type","session_label","date","city_or_route","subject","location_or_miles","crew","section","item_id","item","size","move","duration","status","note","updated_at"];
+  const rows = [headers];
+  const place = s.type==="road" ? s.route : s.city;
+  const loc = s.type==="road" ? s.miles : s.location;
+  const base = () => ["", s.episode, s.type, sessionLabel(s), s.date, place, s.subject, loc, s.crew];
+  rows.push(["session", s.episode, s.type, sessionLabel(s), s.date, place, s.subject, loc, s.crew, "", "", "session header", "", "", "", "", s.best, s.updated]);
+  sp.sections.forEach(sec=>{
+    sec.shots.forEach(sh=>{
+      const [id,desc,size,move,dur] = sh;
+      const st = s.shots[id] || {};
+      rows.push(base().concat([sec.name, id, desc, size, move, dur, st.done?"done":"open", st.note||"", ""]));
+    });
+  });
+  (sp.groups||[]).forEach(g=>{
+    g.items.forEach(([id,label])=>{
+      rows.push(base().concat([g.name, id, label, "", "", "", s.checks[id]?"done":"open", "", ""]));
+    });
+  });
+  (sp.questions||[]).forEach(([id,text,who])=>{
+    rows.push(base().concat(["Questions", id, text+" ["+who+"]", "", "", "", s.answers[id]?"answered":"open", s.answers[id]||"", ""]));
+  });
+  if(s.best) rows.push(base().concat(["Journal","best","Best moment","","","","",s.best,""]));
+  if(s.pickups) rows.push(base().concat(["Journal","pickups","Pickups","","","","",s.pickups,""]));
+  if(s.journal) rows.push(base().concat(["Journal","journal","Free journal","","","","",s.journal,""]));
+  return rows.map(r => r.map(csvCell).join(",")).join("\r\n");
+}
+
+function reportFilename(){
+  const s = cur();
+  const place = (s.type==="road" ? s.route : s.city) || "stop";
+  const slug = (s.episode || s.type || "episode").replace(/[^\w\-]+/g,"_").slice(0,40);
+  const placeSlug = String(place).replace(/[^\w\-]+/g,"_").slice(0,24);
+  return `AS_${slug}_${placeSlug}_${s.date||today()}_${s.id}.csv`;
+}
+
+function utf8b64(str){
+  const bytes = new TextEncoder().encode(str);
+  let bin = "";
+  const chunk = 0x8000;
+  for(let i=0;i<bytes.length;i+=chunk){
+    bin += String.fromCharCode.apply(null, bytes.subarray(i, i+chunk));
+  }
+  return btoa(bin);
+}
+
+async function sendReport(){
+  persist();
+  const token = ($("fToken").value || localStorage.getItem(TOKEN_KEY) || "").trim();
+  const btn = $("btnSend");
+  if(!token){
+    $("adminBox").open = true;
+    $("fToken").focus();
+    $("ghStatus").textContent = "Paste a GitHub token once, then tap Send again.";
+    return;
+  }
+  localStorage.setItem(TOKEN_KEY, token);
+  const name = reportFilename();
+  const path = "reports/" + name;
+  const csv = "\uFEFF" + buildCsv();
+  btn.disabled = true;
+  btn.textContent = "Sending…";
+  $("ghStatus").textContent = "Sending to GitHub…";
+  const headers = {
+    "Authorization": "Bearer " + token,
+    "Accept": "application/vnd.github+json",
+    "X-GitHub-Api-Version": "2022-11-28",
+    "Content-Type": "application/json"
+  };
+  const api = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${path}`;
+  try{
+    let sha = null;
+    const get = await fetch(api + "?ref=" + GH_BRANCH, {headers});
+    if(get.ok){
+      const j = await get.json();
+      sha = j.sha || null;
+    }
+    const put = await fetch(api, {
+      method: "PUT",
+      headers,
+      body: JSON.stringify({
+        message: "field report " + name,
+        content: utf8b64(csv),
+        branch: GH_BRANCH,
+        ...(sha ? {sha} : {})
+      })
+    });
+    const data = await put.json().catch(()=>({}));
+    if(!put.ok){
+      throw new Error(data.message || ("GitHub " + put.status));
+    }
+    const url = (data.content && data.content.html_url) || `https://github.com/${GH_OWNER}/${GH_REPO}/tree/main/reports`;
+    $("ghStatus").innerHTML = "Sent. Admin: <a href=\""+esc(url)+"\">open file</a>";
+    $("saveStatus").textContent = "Sent to GitHub · " + name;
+  }catch(err){
+    $("ghStatus").textContent = "Send failed: " + (err.message || err);
+  }finally{
+    btn.disabled = false;
+    btn.textContent = "Send report to GitHub";
+  }
+}
+
+load();
+bind();
+const params = new URLSearchParams(location.search);
+const q = params.get("list") || (location.hash||"").replace("#","");
+if(q==="road" || q==="city") switchType(q);
+else render();
+})();
+</script>
+</body>
+</html>

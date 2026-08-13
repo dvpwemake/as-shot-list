@@ -1,0 +1,36 @@
+name: issue-to-report
+on:
+  issues:
+    types: [opened]
+permissions:
+  contents: write
+  issues: write
+jobs:
+  save:
+    if: contains(join(github.event.issue.labels.*.name, ','), 'report') || startsWith(github.event.issue.title, 'AS ')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Write CSV from issue body
+        run: |
+          python3 <<'PY'
+          import json, os, pathlib, re
+          ev = json.loads(pathlib.Path(os.environ["GITHUB_EVENT_PATH"]).read_text())
+          issue = ev["issue"]
+          title = issue.get("title") or "report"
+          num = issue["number"]
+          body = issue.get("body") or ""
+          body = re.sub(r"^```(?:csv)?\s*|\s*```$", "", body.strip(), flags=re.I)
+          slug = re.sub(r"[^A-Za-z0-9._-]+", "_", title)[:60] or "report"
+          out = pathlib.Path("reports")
+          out.mkdir(exist_ok=True)
+          (out / f"{slug}_issue{num}.csv").write_text(body, encoding="utf-8")
+          print("wrote", slug, num)
+          PY
+      - name: Commit
+        run: |
+          git config user.name "as-shot-list-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add reports
+          git diff --cached --quiet || git commit -m "report from issue #${{ github.event.issue.number }}"
+          git push
