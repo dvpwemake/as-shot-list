@@ -285,31 +285,20 @@ footer.fine{
     <label class="field"><span>Free journal</span><textarea id="fJournal"></textarea></label>
   </div>
 
-  <details class="card" id="adminBox">
-    <summary><b>Admin</b> — GitHub send (once per phone)</summary>
-    <p class="empty" style="margin:.6rem 0">Reports go to this repo’s <code>reports/</code> folder. Paste a token with Contents write. Stored only on this phone.</p>
-    <label class="field"><span>GitHub token</span>
-      <input id="fToken" type="password" autocomplete="off" placeholder="ghp_… or github_pat_…"/>
-    </label>
-    <p class="status" id="ghStatus"></p>
-  </details>
 </main>
 
 <div class="dock">
   <button type="button" class="btn ghost" id="btnDraft">Save draft</button>
-  <button type="button" class="btn primary" id="btnSend">Send to GitHub</button>
+  <button type="button" class="btn primary" id="btnSend">Email report</button>
 </div>
 
-<footer class="fine">Autosave on · Save draft keeps a local copy · Send to GitHub writes the CSV</footer>
+<footer class="fine">Autosave on · Save draft is local · Email report sends the CSV to drlynch@wemake.cloud</footer>
 
 <script>
 (function(){
 "use strict";
 const STORE = "as.shotlist.v2";
-const TOKEN_KEY = "as.shotlist.gh_token";
-const GH_OWNER = "dvpwemake";
-const GH_REPO = "as-shot-list";
-const GH_BRANCH = "main";
+const REPORT_EMAIL = "drlynch@wemake.cloud";
 
 const CITY = {
   id:"city",
@@ -720,13 +709,8 @@ function bind(){
     }
   });
 
-  $("fToken").value = localStorage.getItem(TOKEN_KEY) || "";
-  $("fToken").addEventListener("input", ()=>{
-    localStorage.setItem(TOKEN_KEY, $("fToken").value.trim());
-    $("ghStatus").textContent = $("fToken").value.trim() ? "Token saved on this phone." : "";
-  });
   $("btnDraft").onclick = ()=>{ persist("Draft saved"); };
-  $("btnSend").onclick = sendReport;
+  $("btnSend").onclick = emailReport;
   $("chips").addEventListener("click", (e)=>{
     const a = e.target.closest("a");
     if(!a) return;
@@ -790,69 +774,49 @@ function reportFilename(){
   return `AS_${slug}_${placeSlug}_${s.date||today()}_${s.id}.csv`;
 }
 
-function utf8b64(str){
-  const bytes = new TextEncoder().encode(str);
-  let bin = "";
-  const chunk = 0x8000;
-  for(let i=0;i<bytes.length;i+=chunk){
-    bin += String.fromCharCode.apply(null, bytes.subarray(i, i+chunk));
-  }
-  return btoa(bin);
+function openMailto(subject, csv, name){
+  const intro = "American Smile field report\nFile: " + name + "\n\n";
+  const href = "mailto:" + REPORT_EMAIL
+    + "?subject=" + encodeURIComponent(subject)
+    + "&body=" + encodeURIComponent(intro + csv);
+  const a = document.createElement("a");
+  a.href = href;
+  a.style.display = "none";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
 }
 
-async function sendReport(){
+async function emailReport(){
   persist("Draft saved");
-  const token = ($("fToken").value || localStorage.getItem(TOKEN_KEY) || "").trim();
-  const btn = $("btnSend");
-  if(!token){
-    $("adminBox").open = true;
-    $("fToken").focus();
-    $("ghStatus").textContent = "Paste a GitHub token once, then tap Send again.";
-    return;
-  }
-  localStorage.setItem(TOKEN_KEY, token);
   const name = reportFilename();
-  const path = "reports/" + name;
-  const csv = "\uFEFF" + buildCsv();
+  const csv = buildCsv();
+  const subject = "AS shot list — " + sessionLabel(cur());
+  const btn = $("btnSend");
   btn.disabled = true;
-  btn.textContent = "Sending…";
-  $("ghStatus").textContent = "Sending to GitHub…";
-  const headers = {
-    "Authorization": "Bearer " + token,
-    "Accept": "application/vnd.github+json",
-    "X-GitHub-Api-Version": "2022-11-28",
-    "Content-Type": "application/json"
-  };
-  const api = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${path}`;
   try{
-    let sha = null;
-    const get = await fetch(api + "?ref=" + GH_BRANCH, {headers});
-    if(get.ok){
-      const j = await get.json();
-      sha = j.sha || null;
+    const file = new File(["\uFEFF" + csv], name, {type: "text/csv"});
+    const share = {
+      files: [file],
+      title: subject,
+      text: "Send this CSV to " + REPORT_EMAIL
+    };
+    if(navigator.canShare && navigator.canShare(share)){
+      await navigator.share(share);
+      $("saveStatus").textContent = "Share sheet opened · pick Mail → " + REPORT_EMAIL;
+      return;
     }
-    const put = await fetch(api, {
-      method: "PUT",
-      headers,
-      body: JSON.stringify({
-        message: "field report " + name,
-        content: utf8b64(csv),
-        branch: GH_BRANCH,
-        ...(sha ? {sha} : {})
-      })
-    });
-    const data = await put.json().catch(()=>({}));
-    if(!put.ok){
-      throw new Error(data.message || ("GitHub " + put.status));
-    }
-    const url = (data.content && data.content.html_url) || `https://github.com/${GH_OWNER}/${GH_REPO}/tree/main/reports`;
-    $("ghStatus").innerHTML = "Sent. Admin: <a href=\""+esc(url)+"\">open file</a>";
-    $("saveStatus").textContent = "Sent to GitHub · " + name;
+    openMailto(subject, csv, name);
+    $("saveStatus").textContent = "Mail opened · to " + REPORT_EMAIL;
   }catch(err){
-    $("ghStatus").textContent = "Send failed: " + (err.message || err);
+    if(String(err && err.name) === "AbortError"){
+      $("saveStatus").textContent = "Email cancelled.";
+      return;
+    }
+    openMailto(subject, csv, name);
+    $("saveStatus").textContent = "Mail opened · to " + REPORT_EMAIL;
   }finally{
     btn.disabled = false;
-    btn.textContent = "Send report to GitHub";
   }
 }
 
