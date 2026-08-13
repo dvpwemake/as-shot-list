@@ -28,16 +28,17 @@
   --fs:21px;
   --fs-sm:18px;
   --fs-lg:26px;
-  --tap:52px;
+  --tap:44px;
+  --strip:38px;
   --font:-apple-system,"PingFang SC","Hiragino Sans GB","Noto Sans SC","Segoe UI",system-ui,sans-serif;
 }
-html[data-size="xl"]{ --fs:26px; --fs-sm:22px; --fs-lg:32px; --tap:58px; }
+html[data-size="xl"]{ --fs:26px; --fs-sm:22px; --fs-lg:32px; --tap:48px; --strip:42px; }
 *{box-sizing:border-box}
-html{-webkit-text-size-adjust:100%; text-size-adjust:100%}
+html{-webkit-text-size-adjust:100%; text-size-adjust:100%; scroll-padding-top:var(--head-h, 7.5rem)}
 body{
   margin:0; font-family:var(--font); font-size:var(--fs); line-height:1.45;
   color:var(--ink); background:var(--cream); min-height:100vh;
-  padding-bottom:calc(100px + var(--safe-b));
+  padding-bottom:calc(88px + var(--safe-b));
 }
 button,input,select,textarea{font:inherit; color:inherit}
 button{cursor:pointer}
@@ -46,21 +47,22 @@ button{cursor:pointer}
 
 header.app{
   position:sticky; top:0; z-index:40;
-  background:rgba(250,246,241,.96);
+  background:rgba(250,246,241,.97);
   backdrop-filter:blur(12px);
   border-bottom:2px solid var(--line);
-  padding:calc(.7rem + var(--safe-t)) 1rem .7rem;
+  padding:calc(.35rem + var(--safe-t)) .7rem .4rem;
 }
-.brand-row{display:flex;align-items:flex-start;justify-content:space-between;gap:.75rem}
-.wordmark{font-weight:800;letter-spacing:-.02em;line-height:1.1;font-size:1.15rem}
+.brand-row{display:flex;align-items:center;justify-content:space-between;gap:.5rem}
+.wordmark{font-weight:800;letter-spacing:-.02em;line-height:1.1;font-size:1.05rem}
 .wordmark .a{color:var(--american)} .wordmark .s{color:var(--smile);margin-left:.12em}
-.sub{margin:.2rem 0 0;font-size:var(--fs-sm);font-weight:700;color:var(--muted)}
-.h-actions{display:flex;gap:.4rem;flex-shrink:0}
+.sub{margin:.1rem 0 0;font-size:.78rem;font-weight:700;color:var(--muted)}
+.h-actions{display:flex;gap:.35rem;flex-shrink:0}
 .btn{
-  min-height:var(--tap); min-width:var(--tap);
-  padding:.55rem .9rem; border-radius:14px; border:2px solid var(--char);
-  background:var(--paper); font-weight:700;
+  min-height:var(--strip); min-width:0;
+  padding:.3rem .75rem; border-radius:6px; border:2px solid var(--char);
+  background:var(--paper); font-weight:700; font-size:var(--fs-sm);
 }
+.btn.icon{min-width:38px;padding:.3rem .45rem}
 .btn:focus-visible{outline:3px solid var(--smile); outline-offset:2px}
 .btn.primary{background:var(--rust); color:#fff; border-color:var(--rust-ink)}
 .btn.ghost{border-color:var(--line)}
@@ -72,14 +74,12 @@ header.app{
   background:#FFF3D6; border:2px solid #C9A227; border-radius:14px;
   padding:.85rem 1rem; margin:0 0 1rem; font-size:var(--fs-sm); font-weight:650;
 }
-.tabs{display:flex;gap:.5rem;margin:0 0 1rem}
+.tabs{display:flex;gap:.4rem;margin:0 0 .85rem}
 .tabs button{flex:1}
 .tabs button[aria-selected="true"]{background:var(--char);color:#fff;border-color:var(--char)}
 @media(max-width:640px){
   .tabs .en{display:none}
-  .dock{display:grid;grid-template-columns:1fr 1fr}
-  .dock .btn{max-width:none;width:100%}
-  .check{transform:scale(1.15)}
+  .check{transform:scale(1.1)}
 }
 
 .card{
@@ -110,15 +110,21 @@ textarea{min-height:7.5rem; resize:vertical; line-height:1.4}
 }
 .bar{flex:1;height:14px;background:#E8DFD4;border-radius:99px;overflow:hidden}
 .bar>i{display:block;height:100%;background:var(--rust);width:0}
-.chips{display:flex;flex-wrap:wrap;gap:.4rem;margin:0 0 1rem}
-.chips a{
-  display:inline-flex;align-items:center;min-height:44px;
-  padding:.35rem .75rem;border-radius:999px;border:2px solid var(--line);
-  background:#fff; color:var(--ink); text-decoration:none; font-weight:750; font-size:var(--fs-sm);
+.chips{
+  display:flex; flex-wrap:nowrap; gap:.3rem;
+  margin:.4rem 0 0; overflow-x:auto; -webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
 }
-.chips a:focus-visible{outline:3px solid var(--smile)}
-
-section.block{margin:0 0 1.25rem}
+.chips::-webkit-scrollbar{display:none}
+.chips a{
+  display:inline-flex;align-items:center;justify-content:center;
+  min-height:32px; padding:.15rem .55rem; flex:0 0 auto;
+  border-radius:6px; border:1.5px solid var(--char);
+  background:#fff; color:var(--ink); text-decoration:none; font-weight:750; font-size:15px;
+  white-space:nowrap;
+}
+.chips a.on,.chips a:focus-visible{background:var(--char);color:#fff;outline:none}
+section.block{margin:0 0 1.25rem; scroll-margin-top:var(--head-h, 7.5rem)}
 .sec-head{
   background:var(--rust); color:#fff; border-radius:14px 14px 0 0;
   padding:.85rem 1rem; display:flex; justify-content:space-between; gap:.75rem; align-items:flex-start;
@@ -177,14 +183,13 @@ section.block{margin:0 0 1.25rem}
 
 .dock{
   position:fixed; left:0; right:0; bottom:0; z-index:50;
-  background:#fff; border-top:2px solid var(--char);
-  padding:.65rem 1rem calc(.65rem + var(--safe-b));
-  display:flex; gap:.5rem; flex-wrap:wrap; justify-content:center;
+  background:#fff; border-top:1px solid var(--line);
+  padding:6px 10px calc(6px + var(--safe-b));
+  display:flex; flex-direction:column; gap:6px;
 }
-.dock .btn{flex:1 1 140px; max-width:280px}
-@media(max-width:640px){
-  .dock{display:grid;grid-template-columns:1fr 1fr}
-  .dock .btn{max-width:none;width:100%;flex:none}
+.dock .btn{
+  width:100%; max-width:none; flex:none;
+  min-height:var(--strip); border-radius:6px;
 }
 
 .modal{
@@ -220,9 +225,10 @@ footer.fine{
       <p class="sub" id="pageSub">每城拍摄清单</p>
     </div>
     <div class="h-actions">
-      <button type="button" class="btn ghost" id="btnSize" aria-pressed="false" aria-label="Larger type" title="Larger type">Aa</button>
+      <button type="button" class="btn ghost icon" id="btnSize" aria-pressed="false" aria-label="Larger type" title="Larger type">Aa</button>
     </div>
   </div>
+  <nav class="chips" id="chips" aria-label="Jump to section"></nav>
 </header>
 
 <main class="wrap" id="main">
@@ -269,7 +275,6 @@ footer.fine{
   </div>
 
   <div class="progress"><span id="progLabel">0 / 0</span><div class="bar" aria-hidden="true"><i id="progBar"></i></div></div>
-  <nav class="chips" id="chips" aria-label="Jump to section"></nav>
   <div id="lists"></div>
 
   <div class="card">
@@ -291,10 +296,11 @@ footer.fine{
 </main>
 
 <div class="dock">
-  <button type="button" class="btn primary" id="btnSend">Send report to GitHub</button>
+  <button type="button" class="btn ghost" id="btnDraft">Save draft</button>
+  <button type="button" class="btn primary" id="btnSend">Send to GitHub</button>
 </div>
 
-<footer class="fine">Autosave on this phone · Send writes a CSV to GitHub for admin download</footer>
+<footer class="fine">Autosave on · Save draft keeps a local copy · Send to GitHub writes the CSV</footer>
 
 <script>
 (function(){
@@ -530,12 +536,17 @@ function load(){
   }
   if(!db.current || !db.sessions.find(x=>x.id===db.current)) db.current = db.sessions[0].id;
 }
-function persist(){
+function persist(label){
   const s = cur();
   if(s) s.updated = nowISO();
   try{ localStorage.setItem(STORE, JSON.stringify(db)); }
-  catch(e){ $("saveStatus").textContent = "Autosave blocked on this phone."; return; }
-  $("saveStatus").textContent = "Autosaved · " + niceTime(nowISO());
+  catch(e){ $("saveStatus").textContent = "Save blocked on this phone."; return false; }
+  $("saveStatus").textContent = (label || "Autosaved") + " · " + niceTime(nowISO());
+  return true;
+}
+function measureHead(){
+  const h = document.querySelector("header.app");
+  if(h) document.documentElement.style.setProperty("--head-h", (h.offsetHeight + 8) + "px");
 }
 function cur(){ return db.sessions.find(x=>x.id===db.current); }
 
@@ -636,6 +647,7 @@ function render(){
   $("chips").innerHTML = chips.join("");
   $("lists").innerHTML = html;
   updateProgress();
+  measureHead();
 }
 
 function updateProgress(){
@@ -713,9 +725,20 @@ function bind(){
     localStorage.setItem(TOKEN_KEY, $("fToken").value.trim());
     $("ghStatus").textContent = $("fToken").value.trim() ? "Token saved on this phone." : "";
   });
+  $("btnDraft").onclick = ()=>{ persist("Draft saved"); };
   $("btnSend").onclick = sendReport;
+  $("chips").addEventListener("click", (e)=>{
+    const a = e.target.closest("a");
+    if(!a) return;
+    e.preventDefault();
+    const el = document.getElementById((a.getAttribute("href")||"").slice(1));
+    if(el) el.scrollIntoView({behavior:"smooth", block:"start"});
+    $("chips").querySelectorAll("a").forEach(x => x.classList.toggle("on", x===a));
+  });
   document.addEventListener("visibilitychange", ()=>{ if(document.hidden) persist(); });
   window.addEventListener("pagehide", persist);
+  window.addEventListener("resize", measureHead);
+  setInterval(()=>{ persist(); }, 20000);
 }
 
 function switchType(type){
@@ -778,7 +801,7 @@ function utf8b64(str){
 }
 
 async function sendReport(){
-  persist();
+  persist("Draft saved");
   const token = ($("fToken").value || localStorage.getItem(TOKEN_KEY) || "").trim();
   const btn = $("btnSend");
   if(!token){
